@@ -309,7 +309,11 @@ export default function Index() {
             <Card className="bg-[#2C3E50] border-4 border-[#8B7355] overflow-hidden shadow-2xl animate-scale-in">
               <CardContent className="p-0">
                 <div className="relative aspect-square bg-gradient-to-br from-[#D4AF37]/20 to-[#8B7355]/20">
-                  <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAwIDIwIEwgMjAgMCBNIDAgMCBMIDIwIDIwIiBzdHJva2U9IiM4QjczNTUiIHN0cm9rZS13aWR0aD0iMC41IiBvcGFjaXR5PSIwLjIiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-30"></div>
+                  <div 
+                    className="absolute inset-0 bg-cover bg-center opacity-70"
+                    style={{ backgroundImage: 'url(https://cdn.poehali.dev/projects/f5d31f9e-e071-454e-a37c-3682b7383fc2/files/fba845d9-5ebc-4575-b45c-6a5ba9f08c37.jpg)' }}
+                  ></div>
+                  <div className="absolute inset-0 bg-[#2C3E50]/10"></div>
                   
                   {landmarks.map((landmark) => (
                     <button
