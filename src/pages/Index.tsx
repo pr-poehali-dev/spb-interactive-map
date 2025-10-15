@@ -8,63 +8,183 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 const landmarks = [
   {
     id: 1,
-    name: 'Дом Ломоносова',
-    description: 'Малоизвестный дом на Мойке, где жил великий ученый',
-    visitors: 120,
-    era: 'XVIII век',
-    x: 45,
-    y: 52,
+    name: 'Особняк Кшесинской',
+    description: 'Дом балерины Матильды Кшесинской в стиле модерн, сейчас музей политической истории',
+    visitors: 320,
+    era: 'XX век',
+    x: 35,
+    y: 28,
     category: 'architecture'
   },
   {
     id: 2,
     name: 'Башня Грифонов',
-    description: 'Загадочная башня с мифическими существами',
-    visitors: 85,
+    description: 'Дом со скульптурами грифонов на Университетской набережной, овеянный легендами',
+    visitors: 180,
     era: 'XIX век',
-    x: 62,
-    y: 38,
+    x: 42,
+    y: 58,
     category: 'mystery'
   },
   {
     id: 3,
-    name: 'Дворик Капеллы',
-    description: 'Уютный внутренний дворик с историей',
-    visitors: 95,
-    era: 'XVIII век',
-    x: 38,
-    y: 65,
-    category: 'architecture'
+    name: 'Каменноостровский театр',
+    description: 'Деревянный театр 1827 года, старейший действующий театр России',
+    visitors: 250,
+    era: 'XIX век',
+    x: 28,
+    y: 18,
+    category: 'culture'
   },
   {
     id: 4,
-    name: 'Сад Аптекарского острова',
-    description: 'Ботанический уголок с редкими растениями',
-    visitors: 150,
-    era: 'XIX век',
-    x: 28,
-    y: 25,
+    name: 'Ботанический сад БИН РАН',
+    description: 'Один из старейших ботанических садов мира с уникальной коллекцией растений',
+    visitors: 420,
+    era: 'XVIII век',
+    x: 68,
+    y: 22,
     category: 'nature'
   },
   {
     id: 5,
-    name: 'Дом с привидениями',
-    description: 'Особняк с мистической репутацией',
-    visitors: 75,
+    name: 'Дом Бака',
+    description: 'Особняк с привидениями на набережной Мойки, известный мистическими историями',
+    visitors: 95,
     era: 'XIX век',
-    x: 70,
-    y: 58,
+    x: 52,
+    y: 48,
     category: 'mystery'
   },
   {
     id: 6,
     name: 'Музей воды',
-    description: 'Интерактивный музей в водонапорной башне',
-    visitors: 180,
+    description: 'Интерактивный музей в водонапорной башне, рассказывающий о системе водоснабжения',
+    visitors: 380,
+    era: 'XX век',
+    x: 72,
+    y: 65,
+    category: 'museum'
+  },
+  {
+    id: 7,
+    name: 'Двор Капеллы',
+    description: 'Уединенный двор Капеллы с акустическими свойствами и атмосферой старого города',
+    visitors: 150,
+    era: 'XIX век',
+    x: 48,
+    y: 42,
+    category: 'architecture'
+  },
+  {
+    id: 8,
+    name: 'Музей-квартира Набокова',
+    description: 'Родовой дом писателя Владимира Набокова на Большой Морской улице',
+    visitors: 280,
+    era: 'XIX век',
+    x: 45,
+    y: 52,
+    category: 'museum'
+  },
+  {
+    id: 9,
+    name: 'Буддийский храм',
+    description: 'Северный буддийский храм в Европе с уникальной архитектурой и атмосферой',
+    visitors: 340,
+    era: 'XX век',
+    x: 58,
+    y: 15,
+    category: 'culture'
+  },
+  {
+    id: 10,
+    name: 'Новая Голландия',
+    description: 'Остров-верфь XVIII века, преобразованный в культурное пространство',
+    visitors: 520,
+    era: 'XVIII век',
+    x: 38,
+    y: 68,
+    category: 'architecture'
+  },
+  {
+    id: 11,
+    name: 'Музей Арктики и Антарктики',
+    description: 'Единственный в России музей, посвященный полярным исследованиям',
+    visitors: 290,
     era: 'XX век',
     x: 55,
-    y: 42,
+    y: 35,
     category: 'museum'
+  },
+  {
+    id: 12,
+    name: 'Дом-музей Достоевского',
+    description: 'Последняя квартира писателя, где был написан роман "Братья Карамазовы"',
+    visitors: 410,
+    era: 'XIX век',
+    x: 62,
+    y: 45,
+    category: 'museum'
+  },
+  {
+    id: 13,
+    name: 'Елисеевский магазин',
+    description: 'Роскошный торговый дом в стиле модерн с уникальными интерьерами',
+    visitors: 310,
+    era: 'XX век',
+    x: 50,
+    y: 40,
+    category: 'architecture'
+  },
+  {
+    id: 14,
+    name: 'Музей-макет "Петровская Акватория"',
+    description: 'Исторический макет Петербурга XVIII века с движущимися элементами',
+    visitors: 450,
+    era: 'XXI век',
+    x: 32,
+    y: 55,
+    category: 'museum'
+  },
+  {
+    id: 15,
+    name: 'Особняк Румянцева',
+    description: 'Дворец на Английской набережной с музеем истории Петербурга',
+    visitors: 220,
+    era: 'XVIII век',
+    x: 40,
+    y: 62,
+    category: 'architecture'
+  },
+  {
+    id: 16,
+    name: 'Сад Бенуа',
+    description: 'Скрытый сад у Мариинского театра, любимое место местных жителей',
+    visitors: 180,
+    era: 'XIX век',
+    x: 35,
+    y: 72,
+    category: 'nature'
+  },
+  {
+    id: 17,
+    name: 'Музей религии',
+    description: 'Музей истории религий в Казанском соборе с уникальными экспонатами',
+    visitors: 260,
+    era: 'XIX век',
+    x: 48,
+    y: 38,
+    category: 'culture'
+  },
+  {
+    id: 18,
+    name: 'Дом Зингера',
+    description: 'Здание компании "Зингер" с глобусом, ныне Дом книги',
+    visitors: 580,
+    era: 'XX век',
+    x: 50,
+    y: 42,
+    category: 'architecture'
   }
 ];
 
@@ -72,20 +192,38 @@ const routes = [
   {
     id: 1,
     name: 'Мистический маршрут',
-    landmarks: ['Башня Грифонов', 'Дом с привидениями'],
-    duration: '2 часа'
+    landmarks: ['Башня Грифонов', 'Дом Бака', 'Двор Капеллы'],
+    duration: '2.5 часа'
   },
   {
     id: 2,
-    name: 'Архитектурное наследие',
-    landmarks: ['Дом Ломоносова', 'Дворик Капеллы'],
-    duration: '3 часа'
+    name: 'Литературный Петербург',
+    landmarks: ['Музей-квартира Набокова', 'Дом-музей Достоевского', 'Дом Зингера'],
+    duration: '3.5 часа'
   },
   {
     id: 3,
     name: 'Природа в городе',
-    landmarks: ['Сад Аптекарского острова', 'Музей воды'],
+    landmarks: ['Ботанический сад БИН РАН', 'Сад Бенуа', 'Новая Голландия'],
+    duration: '3 часа'
+  },
+  {
+    id: 4,
+    name: 'Архитектурные шедевры',
+    landmarks: ['Особняк Кшесинской', 'Елисеевский магазин', 'Особняк Румянцева'],
     duration: '2.5 часа'
+  },
+  {
+    id: 5,
+    name: 'Культурное наследие',
+    landmarks: ['Каменноостровский театр', 'Буддийский храм', 'Музей религии'],
+    duration: '4 часа'
+  },
+  {
+    id: 6,
+    name: 'Музейный день',
+    landmarks: ['Музей Арктики и Антарктики', 'Музей воды', 'Музей-макет "Петровская Акватория"'],
+    duration: '5 часов'
   }
 ];
 
@@ -251,12 +389,18 @@ export default function Index() {
           </div>
 
           <Tabs defaultValue="all" className="w-full">
-            <TabsList className="grid w-full grid-cols-4 mb-8 bg-[#F5E6D3] border-2 border-[#8B7355]">
+            <TabsList className="grid w-full grid-cols-6 mb-8 bg-[#F5E6D3] border-2 border-[#8B7355]">
               <TabsTrigger value="all" className="data-[state=active]:bg-[#D4AF37] data-[state=active]:text-[#2C3E50]">
                 Все
               </TabsTrigger>
               <TabsTrigger value="architecture" className="data-[state=active]:bg-[#D4AF37] data-[state=active]:text-[#2C3E50]">
                 Архитектура
+              </TabsTrigger>
+              <TabsTrigger value="museum" className="data-[state=active]:bg-[#D4AF37] data-[state=active]:text-[#2C3E50]">
+                Музеи
+              </TabsTrigger>
+              <TabsTrigger value="culture" className="data-[state=active]:bg-[#D4AF37] data-[state=active]:text-[#2C3E50]">
+                Культура
               </TabsTrigger>
               <TabsTrigger value="mystery" className="data-[state=active]:bg-[#D4AF37] data-[state=active]:text-[#2C3E50]">
                 Мистика
@@ -266,7 +410,7 @@ export default function Index() {
               </TabsTrigger>
             </TabsList>
 
-            {['all', 'architecture', 'mystery', 'nature', 'museum'].map((category) => (
+            {['all', 'architecture', 'museum', 'culture', 'mystery', 'nature'].map((category) => (
               <TabsContent key={category} value={category} className="animate-fade-in">
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {landmarks
@@ -344,7 +488,7 @@ export default function Index() {
             <h2 className="text-4xl font-serif font-bold text-[#2C3E50] mb-4">Рекомендованные маршруты</h2>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
             {routes.map((route, index) => (
               <Card
                 key={route.id}
