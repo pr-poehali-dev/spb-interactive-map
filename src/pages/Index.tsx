@@ -257,11 +257,31 @@ export default function Index() {
   const [activeSection, setActiveSection] = useState('map');
   const [showMetro, setShowMetro] = useState(false);
   const [hoveredStation, setHoveredStation] = useState<number | null>(null);
+  const [selectedStation, setSelectedStation] = useState<number | null>(null);
 
   const scrollToSection = (section: string) => {
     setActiveSection(section);
     document.getElementById(section)?.scrollIntoView({ behavior: 'smooth' });
   };
+
+  const calculateDistance = (x1: number, y1: number, x2: number, y2: number) => {
+    return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+  };
+
+  const getNearbyLandmarks = (stationId: number) => {
+    const station = metroStations.find(s => s.id === stationId);
+    if (!station) return landmarks;
+    
+    return landmarks
+      .map(landmark => ({
+        ...landmark,
+        distance: calculateDistance(station.x, station.y, landmark.x, landmark.y)
+      }))
+      .filter(landmark => landmark.distance < 25)
+      .sort((a, b) => a.distance - b.distance);
+  };
+
+  const filteredLandmarks = selectedStation ? getNearbyLandmarks(selectedStation) : landmarks;
 
   return (
     <div className="min-h-screen bg-[#F5E6D3]">
@@ -332,7 +352,7 @@ export default function Index() {
             <p className="text-lg text-[#8B7355]">Нажмите на точку, чтобы узнать больше</p>
           </div>
 
-          <div className="flex justify-center mb-6">
+          <div className="flex justify-center gap-4 mb-6 flex-wrap">
             <Button
               onClick={() => setShowMetro(!showMetro)}
               variant={showMetro ? "default" : "outline"}
@@ -343,7 +363,27 @@ export default function Index() {
               <Icon name={showMetro ? "Eye" : "EyeOff"} className="mr-2" size={18} />
               {showMetro ? 'Скрыть линии метро' : 'Показать линии метро'}
             </Button>
+            
+            {selectedStation && (
+              <Button
+                onClick={() => setSelectedStation(null)}
+                variant="outline"
+                className="bg-[#D4AF37] text-[#2C3E50] hover:bg-[#B8941F] border-2 border-[#8B7355]"
+              >
+                <Icon name="X" className="mr-2" size={18} />
+                Сбросить фильтр
+              </Button>
+            )}
           </div>
+          
+          {selectedStation && (
+            <div className="text-center mb-6 animate-fade-in">
+              <div className="inline-block bg-[#2C3E50] text-[#F5E6D3] px-6 py-3 rounded border-2 border-[#D4AF37]">
+                <Icon name="MapPin" className="inline mr-2" size={18} />
+                Показаны достопримечательности рядом с: <span className="font-bold">{metroStations.find(s => s.id === selectedStation)?.name}</span>
+              </div>
+            </div>
+          )}
 
           <div className="grid lg:grid-cols-2 gap-8">
             <Card className="bg-[#2C3E50] border-4 border-[#8B7355] overflow-hidden shadow-2xl animate-scale-in">
@@ -384,9 +424,12 @@ export default function Index() {
                             }}
                             onMouseEnter={() => setHoveredStation(station.id)}
                             onMouseLeave={() => setHoveredStation(null)}
+                            onClick={() => setSelectedStation(selectedStation === station.id ? null : station.id)}
                           >
                             <div 
-                              className="w-3 h-3 rounded-full border-2 border-white cursor-pointer hover:scale-150 transition-transform"
+                              className={`w-3 h-3 rounded-full border-2 border-white cursor-pointer hover:scale-150 transition-transform ${
+                                selectedStation === station.id ? 'scale-150 ring-2 ring-[#D4AF37]' : ''
+                              }`}
                               style={{ backgroundColor: lineColors[station.line as keyof typeof lineColors] }}
                             />
                             {hoveredStation === station.id && (
@@ -401,7 +444,7 @@ export default function Index() {
                     </>
                   )}
                   
-                  {landmarks.map((landmark) => (
+                  {filteredLandmarks.map((landmark) => (
                     <button
                       key={landmark.id}
                       onClick={() => setSelectedLandmark(landmark.id)}
@@ -454,11 +497,40 @@ export default function Index() {
                       </CardContent>
                     </Card>
                   ))
+              ) : selectedStation ? (
+                <Card className="border-2 border-[#8B7355] bg-white/80">
+                  <CardContent className="p-8">
+                    <div className="flex items-center gap-3 mb-4">
+                      <Icon name="MapPin" className="text-[#D4AF37]" size={32} />
+                      <h3 className="text-xl font-serif font-bold text-[#2C3E50]">
+                        Рядом со станцией: {metroStations.find(s => s.id === selectedStation)?.name}
+                      </h3>
+                    </div>
+                    <p className="text-[#8B7355] mb-4">
+                      Найдено достопримечательностей: <span className="font-bold text-[#2C3E50]">{filteredLandmarks.length}</span>
+                    </p>
+                    <div className="space-y-2">
+                      {filteredLandmarks.slice(0, 5).map((landmark) => (
+                        <button
+                          key={landmark.id}
+                          onClick={() => setSelectedLandmark(landmark.id)}
+                          className="w-full text-left p-3 rounded border border-[#8B7355] hover:bg-[#F5E6D3] transition-colors"
+                        >
+                          <div className="font-semibold text-[#2C3E50]">{landmark.name}</div>
+                          <div className="text-sm text-[#8B7355]">{landmark.era} • {landmark.category}</div>
+                        </button>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
               ) : (
                 <Card className="border-2 border-[#8B7355] bg-white/80">
                   <CardContent className="p-8 text-center">
                     <Icon name="MapPin" className="mx-auto mb-4 text-[#8B7355]" size={48} />
-                    <p className="text-[#8B7355] text-lg">Выберите точку на карте для подробной информации</p>
+                    <p className="text-[#8B7355] text-lg mb-2">Выберите точку на карте для подробной информации</p>
+                    {showMetro && (
+                      <p className="text-[#8B7355] text-sm">Или нажмите на станцию метро, чтобы увидеть ближайшие достопримечательности</p>
+                    )}
                   </CardContent>
                 </Card>
               )}
