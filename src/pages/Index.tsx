@@ -227,10 +227,36 @@ const routes = [
   }
 ];
 
+const metroStations = [
+  { id: 1, name: 'Девяткино', x: 10, y: 20, line: 'red' },
+  { id: 2, name: 'Гражданский проспект', x: 30, y: 20, line: 'red' },
+  { id: 3, name: 'Площадь Восстания', x: 50, y: 20, line: 'red' },
+  { id: 4, name: 'Технологический институт', x: 70, y: 20, line: 'red' },
+  { id: 5, name: 'Купчино', x: 90, y: 20, line: 'red' },
+  { id: 6, name: 'Парнас', x: 20, y: 10, line: 'blue' },
+  { id: 7, name: 'Чернышевская', x: 20, y: 30, line: 'blue' },
+  { id: 8, name: 'Сенная площадь', x: 20, y: 50, line: 'blue' },
+  { id: 9, name: 'Фрунзенская', x: 20, y: 70, line: 'blue' },
+  { id: 10, name: 'Рыбацкое', x: 20, y: 90, line: 'blue' },
+  { id: 11, name: 'Приморская', x: 15, y: 30, line: 'green' },
+  { id: 12, name: 'Василеостровская', x: 35, y: 40, line: 'green' },
+  { id: 13, name: 'Площадь Александра Невского', x: 65, y: 60, line: 'green' },
+  { id: 14, name: 'Рыбацкое', x: 85, y: 70, line: 'green' },
+  { id: 15, name: 'Комендантский проспект', x: 30, y: 15, line: 'orange' },
+  { id: 16, name: 'Спасская', x: 40, y: 35, line: 'orange' },
+  { id: 17, name: 'Достоевская', x: 60, y: 65, line: 'orange' },
+  { id: 18, name: 'Шушары', x: 70, y: 85, line: 'orange' },
+  { id: 19, name: 'Беговая', x: 10, y: 50, line: 'purple' },
+  { id: 20, name: 'Адмиралтейская', x: 30, y: 50, line: 'purple' },
+  { id: 21, name: 'Звенигородская', x: 70, y: 50, line: 'purple' },
+  { id: 22, name: 'Волковская', x: 90, y: 50, line: 'purple' },
+];
+
 export default function Index() {
   const [selectedLandmark, setSelectedLandmark] = useState<number | null>(null);
   const [activeSection, setActiveSection] = useState('map');
   const [showMetro, setShowMetro] = useState(false);
+  const [hoveredStation, setHoveredStation] = useState<number | null>(null);
 
   const scrollToSection = (section: string) => {
     setActiveSection(section);
@@ -330,41 +356,49 @@ export default function Index() {
                   <div className="absolute inset-0 bg-[#2C3E50]/10"></div>
                   
                   {showMetro && (
-                    <svg className="absolute inset-0 w-full h-full pointer-events-none" xmlns="http://www.w3.org/2000/svg">
-                      <line x1="10%" y1="20%" x2="90%" y2="20%" stroke="#E63946" strokeWidth="3" opacity="0.8" />
-                      <line x1="20%" y1="10%" x2="20%" y2="90%" stroke="#1E90FF" strokeWidth="3" opacity="0.8" />
-                      <line x1="15%" y1="30%" x2="85%" y2="70%" stroke="#2ECC71" strokeWidth="3" opacity="0.8" />
-                      <line x1="30%" y1="15%" x2="70%" y2="85%" stroke="#F39C12" strokeWidth="3" opacity="0.8" />
-                      <line x1="10%" y1="50%" x2="90%" y2="50%" stroke="#9B59B6" strokeWidth="3" opacity="0.8" />
+                    <>
+                      <svg className="absolute inset-0 w-full h-full pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+                        <line x1="10%" y1="20%" x2="90%" y2="20%" stroke="#E63946" strokeWidth="3" opacity="0.8" />
+                        <line x1="20%" y1="10%" x2="20%" y2="90%" stroke="#1E90FF" strokeWidth="3" opacity="0.8" />
+                        <line x1="15%" y1="30%" x2="85%" y2="70%" stroke="#2ECC71" strokeWidth="3" opacity="0.8" />
+                        <line x1="30%" y1="15%" x2="70%" y2="85%" stroke="#F39C12" strokeWidth="3" opacity="0.8" />
+                        <line x1="10%" y1="50%" x2="90%" y2="50%" stroke="#9B59B6" strokeWidth="3" opacity="0.8" />
+                      </svg>
                       
-                      <circle cx="10%" cy="20%" r="4" fill="#E63946" stroke="white" strokeWidth="1.5" />
-                      <circle cx="30%" cy="20%" r="4" fill="#E63946" stroke="white" strokeWidth="1.5" />
-                      <circle cx="50%" cy="20%" r="4" fill="#E63946" stroke="white" strokeWidth="1.5" />
-                      <circle cx="70%" cy="20%" r="4" fill="#E63946" stroke="white" strokeWidth="1.5" />
-                      <circle cx="90%" cy="20%" r="4" fill="#E63946" stroke="white" strokeWidth="1.5" />
-                      
-                      <circle cx="20%" cy="10%" r="4" fill="#1E90FF" stroke="white" strokeWidth="1.5" />
-                      <circle cx="20%" cy="30%" r="4" fill="#1E90FF" stroke="white" strokeWidth="1.5" />
-                      <circle cx="20%" cy="50%" r="4" fill="#1E90FF" stroke="white" strokeWidth="1.5" />
-                      <circle cx="20%" cy="70%" r="4" fill="#1E90FF" stroke="white" strokeWidth="1.5" />
-                      <circle cx="20%" cy="90%" r="4" fill="#1E90FF" stroke="white" strokeWidth="1.5" />
-                      
-                      <circle cx="15%" cy="30%" r="4" fill="#2ECC71" stroke="white" strokeWidth="1.5" />
-                      <circle cx="35%" cy="40%" r="4" fill="#2ECC71" stroke="white" strokeWidth="1.5" />
-                      <circle cx="50%" cy="50%" r="5" fill="#fff" stroke="#2C3E50" strokeWidth="2" />
-                      <circle cx="65%" cy="60%" r="4" fill="#2ECC71" stroke="white" strokeWidth="1.5" />
-                      <circle cx="85%" cy="70%" r="4" fill="#2ECC71" stroke="white" strokeWidth="1.5" />
-                      
-                      <circle cx="30%" cy="15%" r="4" fill="#F39C12" stroke="white" strokeWidth="1.5" />
-                      <circle cx="40%" cy="35%" r="4" fill="#F39C12" stroke="white" strokeWidth="1.5" />
-                      <circle cx="60%" cy="65%" r="4" fill="#F39C12" stroke="white" strokeWidth="1.5" />
-                      <circle cx="70%" cy="85%" r="4" fill="#F39C12" stroke="white" strokeWidth="1.5" />
-                      
-                      <circle cx="10%" cy="50%" r="4" fill="#9B59B6" stroke="white" strokeWidth="1.5" />
-                      <circle cx="30%" cy="50%" r="4" fill="#9B59B6" stroke="white" strokeWidth="1.5" />
-                      <circle cx="70%" cy="50%" r="4" fill="#9B59B6" stroke="white" strokeWidth="1.5" />
-                      <circle cx="90%" cy="50%" r="4" fill="#9B59B6" stroke="white" strokeWidth="1.5" />
-                    </svg>
+                      {metroStations.map((station) => {
+                        const lineColors = {
+                          red: '#E63946',
+                          blue: '#1E90FF',
+                          green: '#2ECC71',
+                          orange: '#F39C12',
+                          purple: '#9B59B6'
+                        };
+                        return (
+                          <div
+                            key={station.id}
+                            className="absolute pointer-events-auto"
+                            style={{
+                              left: `${station.x}%`,
+                              top: `${station.y}%`,
+                              transform: 'translate(-50%, -50%)'
+                            }}
+                            onMouseEnter={() => setHoveredStation(station.id)}
+                            onMouseLeave={() => setHoveredStation(null)}
+                          >
+                            <div 
+                              className="w-3 h-3 rounded-full border-2 border-white cursor-pointer hover:scale-150 transition-transform"
+                              style={{ backgroundColor: lineColors[station.line as keyof typeof lineColors] }}
+                            />
+                            {hoveredStation === station.id && (
+                              <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-[#2C3E50] text-[#F5E6D3] px-3 py-1.5 rounded text-xs whitespace-nowrap border-2 border-[#D4AF37] shadow-lg z-50">
+                                {station.name}
+                                <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-[#D4AF37]"></div>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </>
                   )}
                   
                   {landmarks.map((landmark) => (
