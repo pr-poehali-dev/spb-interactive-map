@@ -230,6 +230,7 @@ const routes = [
 export default function Index() {
   const [selectedLandmark, setSelectedLandmark] = useState<number | null>(null);
   const [activeSection, setActiveSection] = useState('map');
+  const [showMetro, setShowMetro] = useState(false);
 
   const scrollToSection = (section: string) => {
     setActiveSection(section);
@@ -305,6 +306,19 @@ export default function Index() {
             <p className="text-lg text-[#8B7355]">Нажмите на точку, чтобы узнать больше</p>
           </div>
 
+          <div className="flex justify-center mb-6">
+            <Button
+              onClick={() => setShowMetro(!showMetro)}
+              variant={showMetro ? "default" : "outline"}
+              className={showMetro 
+                ? "bg-[#2C3E50] text-[#F5E6D3] hover:bg-[#D4AF37] hover:text-[#2C3E50] border-2 border-[#8B7355]"
+                : "bg-transparent text-[#2C3E50] hover:bg-[#2C3E50] hover:text-[#F5E6D3] border-2 border-[#8B7355]"}
+            >
+              <Icon name={showMetro ? "Eye" : "EyeOff"} className="mr-2" size={18} />
+              {showMetro ? 'Скрыть линии метро' : 'Показать линии метро'}
+            </Button>
+          </div>
+
           <div className="grid lg:grid-cols-2 gap-8">
             <Card className="bg-[#2C3E50] border-4 border-[#8B7355] overflow-hidden shadow-2xl animate-scale-in">
               <CardContent className="p-0">
@@ -314,6 +328,44 @@ export default function Index() {
                     style={{ backgroundImage: 'url(https://cdn.poehali.dev/projects/f5d31f9e-e071-454e-a37c-3682b7383fc2/files/fba845d9-5ebc-4575-b45c-6a5ba9f08c37.jpg)' }}
                   ></div>
                   <div className="absolute inset-0 bg-[#2C3E50]/10"></div>
+                  
+                  {showMetro && (
+                    <svg className="absolute inset-0 w-full h-full pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+                      <line x1="10%" y1="20%" x2="90%" y2="20%" stroke="#E63946" strokeWidth="3" opacity="0.8" />
+                      <line x1="20%" y1="10%" x2="20%" y2="90%" stroke="#1E90FF" strokeWidth="3" opacity="0.8" />
+                      <line x1="15%" y1="30%" x2="85%" y2="70%" stroke="#2ECC71" strokeWidth="3" opacity="0.8" />
+                      <line x1="30%" y1="15%" x2="70%" y2="85%" stroke="#F39C12" strokeWidth="3" opacity="0.8" />
+                      <line x1="10%" y1="50%" x2="90%" y2="50%" stroke="#9B59B6" strokeWidth="3" opacity="0.8" />
+                      
+                      <circle cx="10%" cy="20%" r="4" fill="#E63946" stroke="white" strokeWidth="1.5" />
+                      <circle cx="30%" cy="20%" r="4" fill="#E63946" stroke="white" strokeWidth="1.5" />
+                      <circle cx="50%" cy="20%" r="4" fill="#E63946" stroke="white" strokeWidth="1.5" />
+                      <circle cx="70%" cy="20%" r="4" fill="#E63946" stroke="white" strokeWidth="1.5" />
+                      <circle cx="90%" cy="20%" r="4" fill="#E63946" stroke="white" strokeWidth="1.5" />
+                      
+                      <circle cx="20%" cy="10%" r="4" fill="#1E90FF" stroke="white" strokeWidth="1.5" />
+                      <circle cx="20%" cy="30%" r="4" fill="#1E90FF" stroke="white" strokeWidth="1.5" />
+                      <circle cx="20%" cy="50%" r="4" fill="#1E90FF" stroke="white" strokeWidth="1.5" />
+                      <circle cx="20%" cy="70%" r="4" fill="#1E90FF" stroke="white" strokeWidth="1.5" />
+                      <circle cx="20%" cy="90%" r="4" fill="#1E90FF" stroke="white" strokeWidth="1.5" />
+                      
+                      <circle cx="15%" cy="30%" r="4" fill="#2ECC71" stroke="white" strokeWidth="1.5" />
+                      <circle cx="35%" cy="40%" r="4" fill="#2ECC71" stroke="white" strokeWidth="1.5" />
+                      <circle cx="50%" cy="50%" r="5" fill="#fff" stroke="#2C3E50" strokeWidth="2" />
+                      <circle cx="65%" cy="60%" r="4" fill="#2ECC71" stroke="white" strokeWidth="1.5" />
+                      <circle cx="85%" cy="70%" r="4" fill="#2ECC71" stroke="white" strokeWidth="1.5" />
+                      
+                      <circle cx="30%" cy="15%" r="4" fill="#F39C12" stroke="white" strokeWidth="1.5" />
+                      <circle cx="40%" cy="35%" r="4" fill="#F39C12" stroke="white" strokeWidth="1.5" />
+                      <circle cx="60%" cy="65%" r="4" fill="#F39C12" stroke="white" strokeWidth="1.5" />
+                      <circle cx="70%" cy="85%" r="4" fill="#F39C12" stroke="white" strokeWidth="1.5" />
+                      
+                      <circle cx="10%" cy="50%" r="4" fill="#9B59B6" stroke="white" strokeWidth="1.5" />
+                      <circle cx="30%" cy="50%" r="4" fill="#9B59B6" stroke="white" strokeWidth="1.5" />
+                      <circle cx="70%" cy="50%" r="4" fill="#9B59B6" stroke="white" strokeWidth="1.5" />
+                      <circle cx="90%" cy="50%" r="4" fill="#9B59B6" stroke="white" strokeWidth="1.5" />
+                    </svg>
+                  )}
                   
                   {landmarks.map((landmark) => (
                     <button
