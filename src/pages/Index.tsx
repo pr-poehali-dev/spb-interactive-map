@@ -290,7 +290,7 @@ export default function Index() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="text-3xl">🗺️</div>
-              <h1 className="text-2xl md:text-3xl font-serif font-bold">Санкт-Петербургъ</h1>
+              <h1 className="text-2xl md:text-3xl font-serif font-bold">Saint Petersburg</h1>
             </div>
             <nav className="hidden md:flex gap-6">
               {['map', 'landmarks', 'history', 'routes', 'about', 'contacts'].map((section) => (
