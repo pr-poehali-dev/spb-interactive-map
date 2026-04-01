@@ -227,29 +227,155 @@ const routes = [
   }
 ];
 
+// Реальная схема метро Санкт-Петербурга, наложенная на карту города
+// Карта: север — вверх, исторический центр — примерно x:40-60%, y:45-60%
+// Линия 1 (красная): Кировско-Выборгская — север→юг, правее центра (x≈63)
+// Линия 2 (синяя): Московско-Петроградская — север→юг, центр (x≈48)
+// Линия 3 (зелёная): Невско-Василеостровская — с запада (острова) через центр на восток-юг
+// Линия 4 (оранжевая): Правобережная — с востока через центр на юг
+// Линия 5 (фиолетовая): Фрунзенско-Приморская — северо-запад→центр→юго-запад
+
+const metroLines = {
+  red:    { color: '#E63946', name: 'Линия 1' },
+  blue:   { color: '#1D70B8', name: 'Линия 2' },
+  green:  { color: '#2ECC71', name: 'Линия 3' },
+  orange: { color: '#F39C12', name: 'Линия 4' },
+  purple: { color: '#9B59B6', name: 'Линия 5' },
+};
+
+// Линии метро как последовательности точек (x%, y%)
+const metroLinesPaths = {
+  // Линия 1 — Красная: вертикальная с севера (y=2) на юг-восток
+  red: [
+    [63, 2], [63, 7], [63, 12], [63, 17], [63, 22],
+    [63, 27], [63, 32], [63, 37], [63, 43], [63, 49],
+    [63, 53], [66, 57], [66, 63], [66, 68], [66, 73],
+    [66, 78], [66, 85],
+  ],
+  // Линия 2 — Синяя: вертикальная с изгибом в центре
+  blue: [
+    [48, 2], [48, 8], [48, 14], [48, 19], [48, 24],
+    [48, 29], [48, 35], [48, 41], [48, 49], [52, 52],
+    [51, 57], [48, 63], [48, 68], [48, 73], [48, 77],
+    [48, 81], [48, 86], [48, 91], [48, 96],
+  ],
+  // Линия 3 — Зелёная: с запада (острова) на восток, затем на юг
+  green: [
+    [5, 26], [11, 30], [18, 37], [28, 46],
+    [52, 52], [66, 57], [68, 63], [68, 68],
+    [68, 73], [68, 78], [68, 85],
+  ],
+  // Линия 4 — Оранжевая: с востока через центр на юг
+  orange: [
+    [88, 65], [83, 59], [78, 54], [73, 50],
+    [66, 57], [61, 54], [57, 57], [55, 60],
+    [53, 63], [51, 66], [49, 70], [51, 75],
+    [51, 80], [51, 85],
+  ],
+  // Линия 5 — Фиолетовая: северо-запад → центр → юго-запад
+  purple: [
+    [31, 17], [27, 22], [29, 30], [33, 36],
+    [36, 42], [41, 49], [46, 57], [48, 63],
+    [40, 68], [34, 74], [28, 80], [22, 83],
+    [19, 88], [14, 93],
+  ],
+};
+
 const metroStations = [
-  { id: 1, name: 'Девяткино', x: 10, y: 20, line: 'red' },
-  { id: 2, name: 'Гражданский проспект', x: 30, y: 20, line: 'red' },
-  { id: 3, name: 'Площадь Восстания', x: 50, y: 20, line: 'red' },
-  { id: 4, name: 'Технологический институт', x: 70, y: 20, line: 'red' },
-  { id: 5, name: 'Купчино', x: 90, y: 20, line: 'red' },
-  { id: 6, name: 'Парнас', x: 20, y: 10, line: 'blue' },
-  { id: 7, name: 'Чернышевская', x: 20, y: 30, line: 'blue' },
-  { id: 8, name: 'Сенная площадь', x: 20, y: 50, line: 'blue' },
-  { id: 9, name: 'Фрунзенская', x: 20, y: 70, line: 'blue' },
-  { id: 10, name: 'Рыбацкое', x: 20, y: 90, line: 'blue' },
-  { id: 11, name: 'Приморская', x: 15, y: 30, line: 'green' },
-  { id: 12, name: 'Василеостровская', x: 35, y: 40, line: 'green' },
-  { id: 13, name: 'Площадь Александра Невского', x: 65, y: 60, line: 'green' },
-  { id: 14, name: 'Рыбацкое', x: 85, y: 70, line: 'green' },
-  { id: 15, name: 'Комендантский проспект', x: 30, y: 15, line: 'orange' },
-  { id: 16, name: 'Спасская', x: 40, y: 35, line: 'orange' },
-  { id: 17, name: 'Достоевская', x: 60, y: 65, line: 'orange' },
-  { id: 18, name: 'Шушары', x: 70, y: 85, line: 'orange' },
-  { id: 19, name: 'Беговая', x: 10, y: 50, line: 'purple' },
-  { id: 20, name: 'Адмиралтейская', x: 30, y: 50, line: 'purple' },
-  { id: 21, name: 'Звенигородская', x: 70, y: 50, line: 'purple' },
-  { id: 22, name: 'Волковская', x: 90, y: 50, line: 'purple' },
+  // ═══ Линия 1 — Красная ═══
+  { id: 1,  name: 'Девяткино',              x: 63, y: 2,  line: 'red' },
+  { id: 2,  name: 'Гражданский проспект',   x: 63, y: 7,  line: 'red' },
+  { id: 3,  name: 'Академическая',          x: 63, y: 12, line: 'red' },
+  { id: 4,  name: 'Политехническая',        x: 63, y: 17, line: 'red' },
+  { id: 5,  name: 'Площадь Мужества',       x: 63, y: 22, line: 'red' },
+  { id: 6,  name: 'Лесная',                 x: 63, y: 27, line: 'red' },
+  { id: 7,  name: 'Выборгская',             x: 63, y: 32, line: 'red' },
+  { id: 8,  name: 'Площадь Ленина',         x: 63, y: 37, line: 'red' },
+  { id: 9,  name: 'Чернышевская',           x: 63, y: 43, line: 'red' },
+  { id: 10, name: 'Площадь Восстания',      x: 63, y: 49, line: 'red' },
+  { id: 11, name: 'Маяковская',             x: 63, y: 53, line: 'red' },
+  // пересадочный узел с лин.3 и лин.4:
+  { id: 12, name: 'Пл. Александра Невского', x: 66, y: 57, line: 'red', transfer: true },
+  { id: 13, name: 'Елизаровская',           x: 66, y: 63, line: 'red' },
+  { id: 14, name: 'Ломоносовская',          x: 66, y: 68, line: 'red' },
+  { id: 15, name: 'Пролетарская',           x: 66, y: 73, line: 'red' },
+  { id: 16, name: 'Обухово',                x: 66, y: 78, line: 'red' },
+  { id: 17, name: 'Рыбацкое',               x: 66, y: 85, line: 'red' },
+
+  // ═══ Линия 2 — Синяя ═══
+  { id: 18, name: 'Парнас',                 x: 48, y: 2,  line: 'blue' },
+  { id: 19, name: 'Проспект Просвещения',   x: 48, y: 8,  line: 'blue' },
+  { id: 20, name: 'Озерки',                 x: 48, y: 14, line: 'blue' },
+  { id: 21, name: 'Удельная',               x: 48, y: 19, line: 'blue' },
+  { id: 22, name: 'Пионерская',             x: 48, y: 24, line: 'blue' },
+  { id: 23, name: 'Чёрная речка',           x: 48, y: 29, line: 'blue' },
+  { id: 24, name: 'Петроградская',          x: 48, y: 35, line: 'blue' },
+  { id: 25, name: 'Горьковская',            x: 48, y: 41, line: 'blue' },
+  // пересадка с лин.1 (Невский/Площадь Восстания):
+  { id: 26, name: 'Невский проспект',       x: 48, y: 49, line: 'blue', transfer: true },
+  // пересадочный узел лин.2+лин.3 (Гостиный двор):
+  { id: 27, name: 'Гостиный двор',          x: 52, y: 52, line: 'blue', transfer: true },
+  // тройной узел лин.2+лин.4+лин.5 (Сенная/Садовая/Спасская):
+  { id: 28, name: 'Сенная площадь',         x: 51, y: 57, line: 'blue', transfer: true },
+  // пересадка лин.2+лин.5 (Технологический):
+  { id: 29, name: 'Технологический институт', x: 48, y: 63, line: 'blue', transfer: true },
+  { id: 30, name: 'Фрунзенская',            x: 48, y: 68, line: 'blue' },
+  { id: 31, name: 'Московские ворота',      x: 48, y: 73, line: 'blue' },
+  { id: 32, name: 'Электросила',            x: 48, y: 77, line: 'blue' },
+  { id: 33, name: 'Парк Победы',            x: 48, y: 81, line: 'blue' },
+  { id: 34, name: 'Московская',             x: 48, y: 86, line: 'blue' },
+  { id: 35, name: 'Звёздная',               x: 48, y: 91, line: 'blue' },
+  { id: 36, name: 'Купчино',                x: 48, y: 96, line: 'blue' },
+
+  // ═══ Линия 3 — Зелёная ═══
+  { id: 37, name: 'Беговая',                x: 5,  y: 26, line: 'green' },
+  { id: 38, name: 'Новокрестовская',        x: 11, y: 30, line: 'green' },
+  { id: 39, name: 'Приморская',             x: 18, y: 37, line: 'green' },
+  { id: 40, name: 'Василеостровская',       x: 28, y: 46, line: 'green' },
+  // пересадка лин.3+лин.2 (Гостиный двор):
+  { id: 41, name: 'Гостиный двор (лин.3)',  x: 54, y: 52, line: 'green', transfer: true },
+  // пересадка лин.3+лин.1+лин.4 (Пл. Александра Невского):
+  { id: 42, name: 'Пл. Александра Невского (лин.3)', x: 68, y: 57, line: 'green', transfer: true },
+  { id: 43, name: 'Елизаровская (лин.3)',   x: 68, y: 63, line: 'green' },
+  { id: 44, name: 'Ломоносовская (лин.3)',  x: 68, y: 68, line: 'green' },
+  { id: 45, name: 'Пролетарская (лин.3)',   x: 68, y: 73, line: 'green' },
+  { id: 46, name: 'Обухово (лин.3)',        x: 68, y: 78, line: 'green' },
+  { id: 47, name: 'Рыбацкое (лин.3)',       x: 68, y: 85, line: 'green' },
+
+  // ═══ Линия 4 — Оранжевая ═══
+  { id: 48, name: 'Улица Дыбенко',          x: 88, y: 65, line: 'orange' },
+  { id: 49, name: 'Проспект Большевиков',   x: 83, y: 59, line: 'orange' },
+  { id: 50, name: 'Ладожская',              x: 78, y: 54, line: 'orange' },
+  { id: 51, name: 'Новочеркасская',         x: 73, y: 50, line: 'orange' },
+  // пересадка лин.4+лин.1+лин.3:
+  { id: 52, name: 'Пл. Александра Невского (лин.4)', x: 64, y: 57, line: 'orange', transfer: true },
+  { id: 53, name: 'Лиговский проспект',     x: 61, y: 54, line: 'orange' },
+  { id: 54, name: 'Достоевская',            x: 57, y: 57, line: 'orange' },
+  { id: 55, name: 'Владимирская',           x: 55, y: 60, line: 'orange' },
+  { id: 56, name: 'Пушкинская',             x: 53, y: 63, line: 'orange' },
+  { id: 57, name: 'Звенигородская',         x: 51, y: 66, line: 'orange' },
+  { id: 58, name: 'Обводный канал',         x: 49, y: 70, line: 'orange' },
+  { id: 59, name: 'Волковская',             x: 51, y: 75, line: 'orange' },
+  { id: 60, name: 'Бухарестская',           x: 51, y: 80, line: 'orange' },
+  { id: 61, name: 'Международная',          x: 51, y: 85, line: 'orange' },
+
+  // ═══ Линия 5 — Фиолетовая ═══
+  { id: 62, name: 'Комендантский проспект', x: 31, y: 17, line: 'purple' },
+  { id: 63, name: 'Старая Деревня',         x: 27, y: 22, line: 'purple' },
+  { id: 64, name: 'Крестовский остров',     x: 29, y: 30, line: 'purple' },
+  { id: 65, name: 'Чкаловская',             x: 33, y: 36, line: 'purple' },
+  { id: 66, name: 'Спортивная',             x: 36, y: 42, line: 'purple' },
+  { id: 67, name: 'Адмиралтейская',         x: 41, y: 49, line: 'purple' },
+  // тройной узел лин.5+лин.2+лин.4 (Садовая/Спасская/Сенная):
+  { id: 68, name: 'Садовая',                x: 46, y: 57, line: 'purple', transfer: true },
+  // пересадка лин.5+лин.2 (Технологический институт):
+  { id: 71, name: 'Технологический ин-т (лин.5)', x: 48, y: 63, line: 'purple', transfer: true },
+  { id: 72, name: 'Балтийская',             x: 40, y: 68, line: 'purple' },
+  { id: 73, name: 'Нарвская',               x: 34, y: 74, line: 'purple' },
+  { id: 74, name: 'Кировский завод',        x: 28, y: 80, line: 'purple' },
+  { id: 75, name: 'Автово',                 x: 22, y: 83, line: 'purple' },
+  { id: 76, name: 'Ленинский проспект',     x: 19, y: 88, line: 'purple' },
+  { id: 77, name: 'Проспект Ветеранов',     x: 14, y: 93, line: 'purple' },
 ];
 
 export default function Index() {
@@ -352,7 +478,7 @@ export default function Index() {
             <p className="text-lg text-[#8B7355]">Нажмите на точку, чтобы узнать больше</p>
           </div>
 
-          <div className="flex justify-center gap-4 mb-6 flex-wrap">
+          <div className="flex justify-center gap-4 mb-4 flex-wrap">
             <Button
               onClick={() => setShowMetro(!showMetro)}
               variant={showMetro ? "default" : "outline"}
@@ -375,12 +501,23 @@ export default function Index() {
               </Button>
             )}
           </div>
+
+          {showMetro && (
+            <div className="flex justify-center gap-4 mb-4 flex-wrap">
+              {(Object.entries(metroLines) as [keyof typeof metroLines, {color: string; name: string}][]).map(([key, line]) => (
+                <div key={key} className="flex items-center gap-1.5 text-sm text-[#2C3E50]">
+                  <div className="w-6 h-2 rounded-full" style={{ backgroundColor: line.color }}></div>
+                  <span className="font-medium">{line.name}</span>
+                </div>
+              ))}
+            </div>
+          )}
           
           {selectedStation && (
             <div className="text-center mb-6 animate-fade-in">
               <div className="inline-block bg-[#2C3E50] text-[#F5E6D3] px-6 py-3 rounded border-2 border-[#D4AF37]">
                 <Icon name="MapPin" className="inline mr-2" size={18} />
-                Показаны достопримечательности рядом с: <span className="font-bold">{metroStations.find(s => s.id === selectedStation)?.name}</span>
+                Показаны достопримечательности рядом с: <span className="font-bold">{metroStations.find(s => s.id === selectedStation)?.name.replace(' (лин.3)', '').replace(' (лин.4)', '').replace(' (лин.5)', '')}</span>
               </div>
             </div>
           )}
@@ -390,29 +527,48 @@ export default function Index() {
               <CardContent className="p-0">
                 <div className="relative aspect-square bg-gradient-to-br from-[#D4AF37]/20 to-[#8B7355]/20">
                   <div 
-                    className="absolute inset-0 bg-cover bg-center opacity-70"
-                    style={{ backgroundImage: 'url(https://cdn.poehali.dev/projects/f5d31f9e-e071-454e-a37c-3682b7383fc2/files/fba845d9-5ebc-4575-b45c-6a5ba9f08c37.jpg)' }}
+                    className="absolute inset-0 bg-cover bg-center opacity-85"
+                    style={{ backgroundImage: 'url(https://cdn.poehali.dev/projects/f5d31f9e-e071-454e-a37c-3682b7383fc2/bucket/e6e3030d-6639-44b3-8395-281a88c6bfba.jpg)' }}
                   ></div>
                   <div className="absolute inset-0 bg-[#2C3E50]/10"></div>
                   
                   {showMetro && (
                     <>
-                      <svg className="absolute inset-0 w-full h-full pointer-events-none" xmlns="http://www.w3.org/2000/svg">
-                        <line x1="10%" y1="20%" x2="90%" y2="20%" stroke="#E63946" strokeWidth="3" opacity="0.8" />
-                        <line x1="20%" y1="10%" x2="20%" y2="90%" stroke="#1E90FF" strokeWidth="3" opacity="0.8" />
-                        <line x1="15%" y1="30%" x2="85%" y2="70%" stroke="#2ECC71" strokeWidth="3" opacity="0.8" />
-                        <line x1="30%" y1="15%" x2="70%" y2="85%" stroke="#F39C12" strokeWidth="3" opacity="0.8" />
-                        <line x1="10%" y1="50%" x2="90%" y2="50%" stroke="#9B59B6" strokeWidth="3" opacity="0.8" />
+                      <svg className="absolute inset-0 w-full h-full pointer-events-none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+                        {/* Линии метро — рисуем из metroLinesPaths */}
+                        {(Object.entries(metroLinesPaths) as [keyof typeof metroLines, number[][]][]).map(([lineKey, pts]) => (
+                          <polyline
+                            key={lineKey}
+                            points={pts.map(([x, y]) => `${x},${y}`).join(' ')}
+                            stroke={metroLines[lineKey].color}
+                            strokeWidth="1.2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            fill="none"
+                            opacity="0.9"
+                          />
+                        ))}
+                        {/* Пересадочные узлы (белые кружки) */}
+                        {/* Невский пр. / Площадь Восстания */}
+                        <circle cx="48" cy="49" r="1.2" fill="white" stroke="#555" strokeWidth="0.4" />
+                        <circle cx="63" cy="49" r="1.2" fill="white" stroke="#555" strokeWidth="0.4" />
+                        {/* Гостиный двор */}
+                        <circle cx="52" cy="52" r="1.5" fill="white" stroke="#555" strokeWidth="0.4" />
+                        {/* Сенная / Садовая / Спасская */}
+                        <circle cx="51" cy="57" r="1.5" fill="white" stroke="#555" strokeWidth="0.4" />
+                        {/* Технологический институт */}
+                        <circle cx="48" cy="63" r="1.5" fill="white" stroke="#555" strokeWidth="0.4" />
+                        {/* Площадь Александра Невского */}
+                        <circle cx="66" cy="57" r="1.5" fill="white" stroke="#555" strokeWidth="0.4" />
                       </svg>
                       
                       {metroStations.map((station) => {
-                        const lineColors = {
-                          red: '#E63946',
-                          blue: '#1E90FF',
-                          green: '#2ECC71',
-                          orange: '#F39C12',
-                          purple: '#9B59B6'
-                        };
+                        const color = metroLines[station.line as keyof typeof metroLines]?.color ?? '#999';
+                        const isSelected = selectedStation === station.id;
+                        const isHovered = hoveredStation === station.id;
+                        // Убираем технические суффиксы из названий для отображения
+                        const displayName = station.name
+                          .replace(' (лин.3)', '').replace(' (лин.4)', '').replace(' (лин.5)', '');
                         return (
                           <div
                             key={station.id}
@@ -424,17 +580,21 @@ export default function Index() {
                             }}
                             onMouseEnter={() => setHoveredStation(station.id)}
                             onMouseLeave={() => setHoveredStation(null)}
-                            onClick={() => setSelectedStation(selectedStation === station.id ? null : station.id)}
+                            onClick={() => setSelectedStation(isSelected ? null : station.id)}
                           >
                             <div 
-                              className={`w-3 h-3 rounded-full border-2 border-white cursor-pointer hover:scale-150 transition-transform ${
-                                selectedStation === station.id ? 'scale-150 ring-2 ring-[#D4AF37]' : ''
+                              className={`rounded-full border-2 border-white cursor-pointer transition-transform ${
+                                isSelected ? 'scale-150 ring-2 ring-[#D4AF37]' : 'hover:scale-150'
                               }`}
-                              style={{ backgroundColor: lineColors[station.line as keyof typeof lineColors] }}
+                              style={{
+                                backgroundColor: color,
+                                width: (station as {transfer?: boolean}).transfer ? '10px' : '8px',
+                                height: (station as {transfer?: boolean}).transfer ? '10px' : '8px',
+                              }}
                             />
-                            {hoveredStation === station.id && (
+                            {isHovered && (
                               <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-[#2C3E50] text-[#F5E6D3] px-3 py-1.5 rounded text-xs whitespace-nowrap border-2 border-[#D4AF37] shadow-lg z-50">
-                                {station.name}
+                                {displayName}
                                 <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-[#D4AF37]"></div>
                               </div>
                             )}
@@ -508,7 +668,7 @@ export default function Index() {
                     <div className="flex items-center gap-3 mb-4">
                       <Icon name="MapPin" className="text-[#D4AF37]" size={32} />
                       <h3 className="text-xl font-serif font-bold text-[#2C3E50]">
-                        Рядом со станцией: {metroStations.find(s => s.id === selectedStation)?.name}
+                        Рядом со станцией: {metroStations.find(s => s.id === selectedStation)?.name.replace(' (лин.3)', '').replace(' (лин.4)', '').replace(' (лин.5)', '')}
                       </h3>
                     </div>
                     <p className="text-[#8B7355] mb-4">
