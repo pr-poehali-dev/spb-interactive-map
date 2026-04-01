@@ -466,6 +466,11 @@ export default function Index() {
                   <div className="absolute top-4 left-4 bg-[#2C3E50]/90 border-2 border-[#D4AF37] p-3 rounded-sm">
                     <Icon name="Navigation" className="text-[#D4AF37]" size={24} />
                   </div>
+
+                  <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-center pointer-events-none">
+                    <p className="text-white font-serif font-bold text-xl tracking-widest drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]" style={{textShadow: '0 0 8px rgba(0,0,0,0.9), 0 2px 4px rgba(0,0,0,0.8)'}}>SAINT-PETERSBURG</p>
+                    <p className="text-[#D4AF37] font-serif font-semibold text-sm tracking-wider mt-1 drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]" style={{textShadow: '0 0 8px rgba(0,0,0,0.9), 0 2px 4px rgba(0,0,0,0.8)'}}>основан в 1703 году</p>
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -720,24 +725,17 @@ export default function Index() {
               <CardContent className="p-8">
                 <div className="space-y-6">
                   <div className="flex items-start gap-4">
-                    <Icon name="MapPin" className="text-[#D4AF37] flex-shrink-0 mt-1" size={24} />
-                    <div>
-                      <h3 className="font-serif font-bold text-[#2C3E50] mb-1">Адрес</h3>
-                      <p className="text-[#8B7355]">Санкт-Петербург, Невский проспект, 1</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-4">
                     <Icon name="Mail" className="text-[#D4AF37] flex-shrink-0 mt-1" size={24} />
                     <div>
                       <h3 className="font-serif font-bold text-[#2C3E50] mb-1">Email</h3>
-                      <p className="text-[#8B7355]">info@spb-history.ru</p>
+                      <p className="text-[#8B7355]">timushakov2009@gmail.com</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-4">
                     <Icon name="Phone" className="text-[#D4AF37] flex-shrink-0 mt-1" size={24} />
                     <div>
                       <h3 className="font-serif font-bold text-[#2C3E50] mb-1">Телефон</h3>
-                      <p className="text-[#8B7355]">+7 (812) 123-45-67</p>
+                      <p className="text-[#8B7355]">+7(911) 810-00-71</p>
                     </div>
                   </div>
                 </div>
@@ -753,7 +751,7 @@ export default function Index() {
             <div className="text-2xl">🗺️</div>
             <p className="text-lg font-serif">Санкт-Петербургъ</p>
           </div>
-          <p className="text-sm opacity-75">Исторические достопримечательности © 2024</p>
+          <p className="text-sm opacity-75">Исторические достопримечательности © 2026</p>
         </div>
       </footer>
     </div>
